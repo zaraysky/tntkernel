@@ -1,0 +1,38 @@
+# Vim Swap files
+.*.sw[a-z]
+
+# Mac OSx
+.DS_Store
+
+# Tags
+tags
+
+# Python
+__pycache__
+*.py[cod]
+venv
+
+# local files
+build/
+node_modules/
+.rocks
+.cache
+.idea
+
+# python tests result
+tests/python/result.xml
+/result.xml
+
+# generated docs
+doc/apidoc
+
+# Ansible
+*.retry
+.vagrant/
+
+# Visual Studio Code files
+.vscode/
+
+notebooks/
+*.log
+.ipynb_checkpoints/
