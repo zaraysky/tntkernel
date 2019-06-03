@@ -1,9 +1,6 @@
+import os
 CHUNK_LENGTH = 1024
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 3313  # The port used by the server
-
-START_OF_RESPONSE = '---'
-START_OF_STRING = ' -'
-END_OF_RESPONSE = '...'
-
+HOST = os.getenv('TNT_ADDRESS', '127.0.0.1')
+SOCKET_PORT = os.getenv('TNT_SOCKET_PORT', 3312)
+CONSOLE_PORT = os.getenv('TNT_CONSOLE_PORT', 3301)

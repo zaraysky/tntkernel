@@ -1,8 +1,10 @@
+import tarantool
 import logging
 import socket
+import json
 from ipykernel.kernelbase import Kernel
 
-from .config import CHUNK_LENGTH, HOST, PORT
+from .config import CHUNK_LENGTH, HOST, SOCKET_PORT, CONSOLE_PORT
 
 logging.basicConfig(filename="tarantool_kernel.log", level=logging.INFO)
 
@@ -17,7 +19,7 @@ def clear_command(command: str) -> str:
         return command[:comment_start]
     return command
 
-def send_receive(s: socket, cmd: str, tab=False) -> str:
+def send_receive(s: socket, cmd: str) -> str:
     cmd = ' '.join(list(map(clear_command, cmd.split('\n')))) + '\n'
     s.sendall(cmd.encode())
 
@@ -30,7 +32,6 @@ def send_receive(s: socket, cmd: str, tab=False) -> str:
 
         if '...' in decoded_data:
             break
-
 
     return parse_response(_buffer)
 
@@ -52,7 +53,7 @@ class TNTKernel(Kernel):
         super().__init__(**kwargs)
 
         self.tnt_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.tnt_socket.connect_ex((HOST, PORT))
+        self.tnt_socket.connect_ex((HOST, SOCKET_PORT))
 
         # First screen
         logging.info("First screen start")
@@ -84,12 +85,30 @@ class TNTKernel(Kernel):
                }
 
     def do_complete(self, code, cursor_pos):
-        # code = code[:cursor_pos]
-        response = send_receive(self.tnt_socket, code, tab=True)
-        if response == 'X':
-            response = send_receive(self.tnt_socket, code, tab=True)
 
-        matches = response.split(chr(9))
+        logging.info("code completion")
+        logging.info(str(code))
+        logging.info(str(cursor_pos))
+        temp_code = code.split('\n')[-1].split(' ')[-1]
+        temp_cursor_pos = len(temp_code)
+
+        tnt = tarantool.connect(HOST, CONSOLE_PORT)
+
+        autocompetion = """
+        function jupyter_autocomplete(string, pos1, pos2)
+            local json = require('json')
+            local yaml = require('yaml')
+            local console = require('console')
+            local c = console.completion_handler(string, pos1, pos2)
+            local res = c or {}
+            return json.encode(res)
+        end
+        """
+        _ = tnt.eval(autocompetion)
+
+        cmd = f'return jupyter_autocomplete("{temp_code}",{0},{temp_cursor_pos})'
+        matches = json.loads(tnt.eval(cmd)[0])
+
         default = {'matches': matches, 'cursor_start': 0,
                    'cursor_end': cursor_pos, 'metadata': dict(),
                    'status': 'ok'}
