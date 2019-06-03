@@ -28,6 +28,10 @@ box.schema.user.grant('guest', 'read, write, execute', 'universe', nil, {if_not_
 require('console').listen(IP .. ':' .. PORT)
 ```
 
+# Connect to working tarantool
+
+`recuire('console').listen('127.0.0.1:3312')`
+
 # Installation
 
 >Please note in you have the kernel installed you have to uninstall it using
