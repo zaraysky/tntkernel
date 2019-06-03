@@ -23,12 +23,10 @@ If you want to use local tarantool, you can run it using command
 The source code of `config.lua` is:
 
 ```lua
+box.cfg{listen=os.getenv('TNT_CONSOLE_PORT') or 3301}
 
+local IP = os.getenv('TNT_ADDRESS') or '127.0.0.1'
+local PORT = os.getenv('TNT_SOCKET_PORT') or '3312'
+box.schema.user.grant('guest', 'read, write, execute', 'universe', nil, {if_not_exists=true})
+require('console').listen(IP .. ':' .. PORT)
 ```
-
-
-
-HOST = os.getenv('TNT_ADDRESS', '127.0.0.1')
-PORT = os.getenv('TNT_CONSOLE_PORT', 3301)
-tnt = tarantool.connect(HOST, PORT)
-
