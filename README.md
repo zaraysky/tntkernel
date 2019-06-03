@@ -9,7 +9,9 @@ This is very simple implementation with a lot of known and hidden ~gems~ issues:
 
 # Run Tarantool instance in Docker
 You can use preconfigured docker image of tarantool 
-`docker run -e TNT_ADDRESS='127.0.0.1' -p 3312:3312 -p 3301:3301 -e TNT_CONSOLE_PORT='3301' -e TNT_SOCKET_PORT=3312 --rm zaraysky/tntrepo:tntsocketserver`
+
+```docker run -e TNT_ADDRESS='0.0.0.0' -p 3312:3312 -p 3301:3301 -e TNT_CONSOLE_PORT='3301' -e TNT_SOCKET_PORT=3312 --rm zaraysky/tntrepo:tntsocketserver```
+
 
 # Run tarantool locally
 
