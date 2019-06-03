@@ -7,11 +7,8 @@ This is very simple implementation with a lot of known and hidden ~gems~ issues:
  - when output is long enough and not finished by `...` then next code snippet can get output from this long output
  - `print()` output can be found in `stdout` of tarantool instance. If you need to get value of some variable or even function - just type it in new code cell and press `Run` 
 
-# Installation
-
-jupyter kernelspec install --user tntkernel
-
 # Run Tarantool instance in Docker
+You can use preconfigured docker image of tarantool 
 `docker run -e TNT_ADDRESS='127.0.0.1' -p 3312:3312 -p 3301:3301 -e TNT_CONSOLE_PORT='3301' -e TNT_SOCKET_PORT=3312 --rm zaraysky/tntrepo:tntsocketserver`
 
 # Run tarantool locally
@@ -30,3 +27,30 @@ local PORT = os.getenv('TNT_SOCKET_PORT') or '3312'
 box.schema.user.grant('guest', 'read, write, execute', 'universe', nil, {if_not_exists=true})
 require('console').listen(IP .. ':' .. PORT)
 ```
+
+# Installation
+
+>Please note in you have the kernel installed you have to uninstall it using
+`jupyter kernelspec uninstall tntkernel`
+
+```bash
+# Clone kernel source from GitHub
+mkdir jupyter
+cd jupyter
+python3 -m venv venv
+source venv/bin/activate
+pip install jupyter tarantool
+
+
+git clone git@github.com:zaraysky/tntkernel.git
+
+jupyter kernelspec install tntkernel
+```
+
+# Start it
+Just run 
+```bash
+jupyter notebook
+```
+
+
