@@ -32,24 +32,28 @@ require('console').listen(IP .. ':' .. PORT)
 
 # Connect to working tarantool
 
-`recuire('console').listen('127.0.0.1:3312')`
+Run this command in tarantool's console (REPL):
+```lua
+require('console').listen('127.0.0.1:3312')
+```
 
-# Installation
+# Kernel installation
 
->Please note in you have the kernel installed you have to uninstall it using
-`jupyter kernelspec uninstall tntkernel`
+>Please note if you have the previous version of the kernel installed you have to uninstall it using
 
 ```bash
-# Clone kernel source from GitHub
+jupyter kernelspec uninstall tntkernel
+```
+
+```bash
 mkdir jupyter
 cd jupyter
 python3 -m venv venv
 source venv/bin/activate
 pip install jupyter tarantool
 
-
+# clone it from GitHub to tntkernel folder
 git clone git@github.com:zaraysky/tntkernel.git
-
 jupyter kernelspec install tntkernel
 ```
 
